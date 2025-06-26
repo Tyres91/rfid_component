@@ -1,0 +1,49 @@
+esphome:
+  name: heizung
+  friendly_name: Heizung
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "mIp/KXYEWyMU7HjyDWsLj94RBy8ZtNPihhg+ShiFJ0M="
+
+ota:
+  platform: esphome
+  password: "3eb804d7a9507b6be0e5686028e2f1a5"
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO4
+    name: Pellets
+    filters:
+      - delayed_off: 10ms
+      - delayed_on: 10ms
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid_geh_weg
+    password: !secret wifi_password_geh_weg
+  - ssid: !secret wifi_ssid_werkstatt
+    password: !secret wifi_password_werkstatt
+  - ssid: !secret wifi_ssid_geh_weg2_4
+    password: !secret wifi_password_geh_weg2_4
+  - ssid: !secret wifi_ssid_werkstatt2_4
+    password: !secret wifi_password_werkstatt2_4
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Heizung Fallback Hotspot"
+    password: "ZL6AaNDAZxTC"
+
+captive_portal:
+    
+
+    

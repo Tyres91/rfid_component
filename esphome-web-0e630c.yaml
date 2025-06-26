@@ -1,0 +1,77 @@
+esphome:
+  name: esphome-web-0e630c
+  friendly_name: Stromzähler Werkstatt
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "hmKxtR74OVC0RuxemY7ka1sI/wpcDkZbM1Qa+M9us0g="
+  actions:
+    - action: set_pulse_total
+      variables:
+        new_pulse_total: int
+      then:
+        - pulse_counter.set_total_pulses:
+            id: leistung_wp_buero
+            value: !lambda 'return new_pulse_total;'   
+
+ota:
+  platform: esphome
+
+esp32_ble_tracker:
+
+bluetooth_proxy:
+
+binary_sensor:
+  - platform: ble_presence
+    mac_address: D4:3A:2C:B5:D0:55
+    name: "BLE Tracker Pixel Pro"
+
+sensor:
+  - platform: ble_rssi
+    mac_address: D4:3A:2C:B5:D0:55
+    name: "BLE RSSI Pixel Pro"
+
+  - platform: pulse_counter
+    pin: GPIO27
+    unit_of_measurement: 'W'
+    accuracy_decimals: 1
+    id: leistung_wp_buero
+    name: 'el. Leistung WP Buero'
+    update_interval: 1min
+    device_class: power
+    state_class: measurement
+    filters:
+      - multiply: 60
+    total:
+      unit_of_measurement: 'kWh'
+      accuracy_decimals: 1
+      device_class: energy
+      state_class: total_increasing
+      id: Stromzaehler_buero_total
+      name: 'Stromzaehler Buero'
+      filters:
+        - multiply: 0.001
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid_geh_weg
+    password: !secret wifi_password_geh_weg
+  - ssid: !secret wifi_ssid_werkstatt
+    password: !secret wifi_password_werkstatt
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esphome-Web-0E630C"
+    password: "ZUunpoGHuWPi"
+
+captive_portal:
+    

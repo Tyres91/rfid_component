@@ -1,0 +1,49 @@
+esphome:
+  name: dual-rfid
+  friendly_name: Dual RFID
+
+esp8266:
+  board: esp01_1m
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "b3SHdTkRbqT2gX6XAVHt83jV187GIumbftzdrsqMmP4="
+
+ota:
+  - platform: esphome
+    password: "9bfae24e3a0f2fc15907bec3d7d51f69"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Dual-Rfid Fallback Hotspot"
+    password: "D9qrlJDlMKRy"
+
+captive_portal:
+    
+
+external_components:
+  - source: my_components
+    components: [uart_card_reader]
+
+uart:
+  id: rfid_uart
+  rx_pin: GPIO13
+  tx_pin: GPIO12
+  baud_rate: 9600
+
+uart_card_reader:
+  id: my_reader
+  uart_id: rfid_uart
+  on_tag:
+    then:
+      - logger.log:
+          format: "Karte erkannt! ID: %u | Typ: %u"
+          args: [card_id, card_type]

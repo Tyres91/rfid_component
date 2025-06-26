@@ -1,0 +1,44 @@
+esphome:
+  name: esphome-web-80b190
+  friendly_name: ESP32 Test
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: false
+
+binary_sensor:
+  # Presence based on iBeacon UUID
+  - platform: ble_presence
+    ibeacon_uuid: '2F234454-CF6D-4A0F-ADF2-F4911BA9FFA6'
+    name: "ESP32 BLE Tracker Test Service iBeacon"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "ClRLkCQk9j/JbrqjJV8Rf/fsZt5iWY/8z18XB+7y1oQ="
+
+ota:
+
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid_geh_weg
+    password: !secret wifi_password_geh_weg
+  - ssid: !secret wifi_ssid_werkstatt
+    password: !secret wifi_password_werkstatt
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esphome-Web-80B190"
+    password: "QUYET11kEkAA"
+
+captive_portal:
+    
